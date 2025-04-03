@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Details | Heart Disease Prediction</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 h-screen flex flex-col">
+
+    <nav class="bg-white shadow-md p-4 flex justify-between items-center">
+        <h1 class="text-xl font-bold">Heart Disease Prediction</h1>
+        <div>
+            <a href="/logout" class="bg-red-500 text-white px-4 py-2 rounded">Logout</a>
+        </div>
+    </nav>
+
+    <div class="flex-grow flex items-center justify-center">
+        <div class="bg-white p-8 rounded-lg shadow-lg w-96">
+            <h2 class="text-xl font-bold mb-4 text-center">Enter Patient Details</h2>
+            <form action="/submit_patient_details" method="POST">
+                <label class="block mb-2">Name</label>
+                <input type="text" name="patient_name" class="w-full p-2 border rounded mb-4" required>
+            
+                <label class="block mb-2">Age</label>
+                <input type="number" name="age" class="w-full p-2 border rounded mb-4" required>
+            
+                <label class="block mb-2">Gender</label>
+                <select name="gender" class="w-full p-2 border rounded mb-4" required>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
+            
+                <button class="bg-blue-500 text-white w-full py-2 rounded">Submit</button>
+            </form>
+            
+        </div>
+    </div>
+
+</body>
+</html>

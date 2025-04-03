@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction Result | Heart Disease Prediction</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 h-screen flex flex-col">
+    <nav class="bg-white shadow-md p-4 flex justify-between items-center">
+        <h1 class="text-xl font-bold">Heart Disease Prediction</h1>
+        <div>
+            <a href="/logout" class="bg-red-500 text-white px-4 py-2 rounded">Logout</a>
+        </div>
+    </nav>
+
+    <div class="flex-grow flex items-center justify-center">
+        <div class="bg-white p-8 rounded-lg shadow-lg w-96 text-center">
+            <h2 class="text-xl font-bold mb-4">Prediction Result</h2>
+            <p class="text-lg">The prediction result is: 
+                <span class="font-bold {% if prediction == 'High Risk of Heart Disease' %} text-red-500 {% else %} text-green-500 {% endif %}">
+                    {{ prediction }}
+                </span>
+            </p>
+            <p class="text-gray-600 mt-2">Confidence: <span class="font-semibold">{{ confidence }}%</span></p>
+        </div>
+    </div>
+
+</body>
+</html>
