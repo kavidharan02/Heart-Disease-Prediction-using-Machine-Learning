@@ -5,26 +5,17 @@ from pymongo import MongoClient
 from urllib.parse import quote_plus
 
 app = Flask(__name__)
-
-# Secret key for session - set as environment variable or fallback
 app.secret_key = os.getenv('FLASKSECRETKEY', 'secretkey')
 
-# MongoDB credentials - use environment variable or hardcode here for testing
 MONGO_USER = 'kavidharan02'
-MONGO_PASSWORD = os.getenv('MONGO_PASSWORD', 'Kavi@211')  # Make sure this is URL encoded if special chars
-
-# URL encode the password
+MONGO_PASSWORD = os.getenv('MONGO_PASSWORD', 'Kavi@211')
 encoded_password = quote_plus(MONGO_PASSWORD)
-
-# Construct the URI with encoded password
 mongo_uri = f"mongodb+srv://{MONGO_USER}:{encoded_password}@heart-disease-db.rvvhg4q.mongodb.net/heart_disease_db?retryWrites=true&w=majority"
 
-# Initialize bcrypt and MongoDB client
 bcrypt = Bcrypt(app)
 client = MongoClient(mongo_uri)
 db = client["heart_disease_db"]
 
-# Collections
 users_collection = db["users"]
 patients_collection = db["patients"]
 predictions_collection = db["predictions"]
@@ -47,8 +38,8 @@ def register():
         users_collection.insert_one({"username": username, "email": email, "password": password})
         flash("Registration successful! Please log in.", "success")
         return redirect(url_for('login'))
-    
-    return render_template('register.html')
+
+    return render_template('auth.html', show_register=True)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -63,8 +54,8 @@ def login():
             return redirect(url_for('patient_details'))
         else:
             flash("Invalid credentials, try again.", "danger")
-    
-    return render_template('login.html')
+
+    return render_template('auth.html', show_register=False)
 
 @app.route('/patient_details', methods=['GET', 'POST'])
 def patient_details():
@@ -97,15 +88,15 @@ def submit_patient_details():
 
     patients_collection.insert_one(patient_data)
     flash("Patient details submitted successfully!", "success")
-    
+
     return redirect(url_for('report_input'))
 
-@app.route('/report_input', methods=['GET', 'POST'])
+@app.route('/report_input', methods=['GET'])
 def report_input():
     if 'user' not in session:
         flash("Please log in first.", "warning")
         return redirect(url_for('login'))
-    
+
     return render_template('index.html')
 
 @app.route('/predict', methods=['POST'])
@@ -115,7 +106,7 @@ def predict():
         return redirect(url_for('login'))
 
     form_data = request.form.to_dict()
-    
+
     try:
         age = int(form_data.get("age", 0))
         cholesterol = float(form_data.get("serum_cholesterol", 0.0))
@@ -124,7 +115,7 @@ def predict():
         num_major_vessels = int(form_data.get("num_major_vessels", 0))
         chest_pain_type = form_data.get("chest_pain_type", "").strip()
 
-        # Basic risk assessment logic
+        # Simple risk logic (replace with your ML model later)
         if (cholesterol > 220 or blood_pressure > 150 or oldpeak > 2 or num_major_vessels > 1 or chest_pain_type in ["Typical Angina", "Asymptomatic"]):
             prediction = "High Risk of Heart Disease"
             confidence = 85
@@ -132,7 +123,6 @@ def predict():
             prediction = "Low Risk of Heart Disease"
             confidence = 60
 
-        # Store prediction in MongoDB
         prediction_data = {
             "user_email": session['user'],
             "age": age,
@@ -144,8 +134,9 @@ def predict():
             "prediction": prediction,
             "confidence": confidence
         }
+
         predictions_collection.insert_one(prediction_data)
-        
+
         return render_template('result.html', prediction=prediction, confidence=confidence)
 
     except Exception as e:

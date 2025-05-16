@@ -6,36 +6,59 @@
     <title>Patient Details | Heart Disease Prediction</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 h-screen flex flex-col">
-
-    <nav class="bg-white shadow-md p-4 flex justify-between items-center">
-        <h1 class="text-xl font-bold">Heart Disease Prediction</h1>
-        <div>
-            <a href="/logout" class="bg-red-500 text-white px-4 py-2 rounded">Logout</a>
+<body class="bg-red-50 min-h-screen flex flex-col">
+    <!-- Navbar -->
+    <nav class="bg-white shadow-sm w-full">
+        <div class="w-full flex items-center justify-between px-4 py-4">
+            <a href="/" class="flex items-center space-x-2">
+                <span class="text-xl sm:text-2xl font-bold text-red-600 whitespace-nowrap">Heart Disease Prediction</span>
+            </a>
+            <div class="flex items-center space-x-2">
+                <a href="/logout" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 text-sm sm:text-base font-medium">Logout</a>
+            </div>
         </div>
     </nav>
-
-    <div class="flex-grow flex items-center justify-center">
-        <div class="bg-white p-8 rounded-lg shadow-lg w-96">
-            <h2 class="text-xl font-bold mb-4 text-center">Enter Patient Details</h2>
-            <form action="/submit_patient_details" method="POST">
-                <label class="block mb-2">Name</label>
-                <input type="text" name="patient_name" class="w-full p-2 border rounded mb-4" required>
-            
-                <label class="block mb-2">Age</label>
-                <input type="number" name="age" class="w-full p-2 border rounded mb-4" required>
-            
-                <label class="block mb-2">Gender</label>
-                <select name="gender" class="w-full p-2 border rounded mb-4" required>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                </select>
-            
-                <button class="bg-blue-500 text-white w-full py-2 rounded">Submit</button>
+    <!-- Main Content -->
+    <main class="flex-grow flex items-center justify-center px-2">
+        <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-xl w-full max-w-md mx-auto">
+            <h2 class="text-xl sm:text-2xl font-bold mb-6 text-center text-red-700">Enter Patient Details</h2>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                <div class="space-y-2 mb-4">
+                  {% for category, message in messages %}
+                    <div class="text-center py-2 rounded-lg text-base font-medium
+                        {% if category == 'success' %}bg-green-100 text-green-700 border border-green-200
+                        {% elif category == 'danger' %}bg-red-100 text-red-700 border border-red-200
+                        {% else %}bg-yellow-100 text-yellow-700 border border-yellow-200{% endif %}">
+                      {{ message }}
+                    </div>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            {% endwith %}
+            <form action="/submit_patient_details" method="POST" class="space-y-4">
+                <div>
+                    <label class="block mb-1 font-medium text-gray-700">Name</label>
+                    <input type="text" name="patient_name" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400" required>
+                </div>
+                <div>
+                    <label class="block mb-1 font-medium text-gray-700">Age</label>
+                    <input type="number" name="age" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400" required>
+                </div>
+                <div>
+                    <label class="block mb-1 font-medium text-gray-700">Gender</label>
+                    <select name="gender" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400" required>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </select>
+                </div>
+                <button class="w-full bg-red-600 text-white py-3 rounded-lg font-semibold hover:bg-red-700">Submit</button>
             </form>
-            
         </div>
-    </div>
-
+    </main>
+    <!-- Footer -->
+    <footer class="bg-white shadow-sm p-4 text-center text-gray-500 text-xs sm:text-base">
+        &copy; {{ year }} Heart Disease Prediction. All rights reserved.
+    </footer>
 </body>
 </html>

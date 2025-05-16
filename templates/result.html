@@ -6,25 +6,36 @@
     <title>Prediction Result | Heart Disease Prediction</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 h-screen flex flex-col">
-    <nav class="bg-white shadow-md p-4 flex justify-between items-center">
-        <h1 class="text-xl font-bold">Heart Disease Prediction</h1>
-        <div>
-            <a href="/logout" class="bg-red-500 text-white px-4 py-2 rounded">Logout</a>
+<body class="bg-red-50 min-h-screen flex flex-col">
+    <!-- Navbar -->
+    <nav class="bg-white shadow-sm w-full">
+        <div class="w-full flex items-center justify-between px-4 py-4">
+            <a href="/" class="flex items-center space-x-2">
+                <span class="text-xl sm:text-2xl font-bold text-red-600 whitespace-nowrap">Heart Disease Prediction</span>
+            </a>
+            <div class="flex items-center space-x-2">
+                <a href="/logout" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 text-sm sm:text-base font-medium">Logout</a>
+            </div>
         </div>
     </nav>
-
-    <div class="flex-grow flex items-center justify-center">
-        <div class="bg-white p-8 rounded-lg shadow-lg w-96 text-center">
-            <h2 class="text-xl font-bold mb-4">Prediction Result</h2>
-            <p class="text-lg">The prediction result is: 
-                <span class="font-bold {% if prediction == 'High Risk of Heart Disease' %} text-red-500 {% else %} text-green-500 {% endif %}">
-                    {{ prediction }}
-                </span>
-            </p>
-            <p class="text-gray-600 mt-2">Confidence: <span class="font-semibold">{{ confidence }}%</span></p>
+    <!-- Main Content -->
+    <main class="flex-grow flex items-center justify-center px-2">
+        <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-xl w-full max-w-md text-center mx-auto">
+            <h2 class="text-xl sm:text-2xl font-bold mb-6 text-center text-red-700">Prediction Result</h2>
+            <div class="mb-4">
+                <span class="text-lg font-semibold text-gray-700">Prediction:</span>
+                <span class="text-xl font-bold text-red-600">{{ prediction }}</span>
+            </div>
+            <div class="mb-6">
+                <span class="text-lg font-semibold text-gray-700">Confidence:</span>
+                <span class="text-xl font-bold text-green-600">{{ confidence }}%</span>
+            </div>
+            <a href="/report_input" class="bg-red-600 text-white px-4 py-2 rounded text-base font-medium">Predict Another</a>
         </div>
-    </div>
-
+    </main>
+    <!-- Footer -->
+    <footer class="bg-white shadow-sm p-4 text-center text-gray-500 text-xs sm:text-base">
+        &copy; {{ year }} Heart Disease Prediction. All rights reserved.
+    </footer>
 </body>
 </html>
