@@ -1,13 +1,30 @@
+import os
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_bcrypt import Bcrypt
 from pymongo import MongoClient
+from urllib.parse import quote_plus
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key_here'
-bcrypt = Bcrypt(app)
 
-client = MongoClient("mongodb://localhost:27017/")
+# Secret key for session - set as environment variable or fallback
+app.secret_key = os.getenv('FLASKSECRETKEY', 'secretkey')
+
+# MongoDB credentials - use environment variable or hardcode here for testing
+MONGO_USER = 'kavidharan02'
+MONGO_PASSWORD = os.getenv('MONGO_PASSWORD', 'Kavi@211')  # Make sure this is URL encoded if special chars
+
+# URL encode the password
+encoded_password = quote_plus(MONGO_PASSWORD)
+
+# Construct the URI with encoded password
+mongo_uri = f"mongodb+srv://{MONGO_USER}:{encoded_password}@heart-disease-db.rvvhg4q.mongodb.net/heart_disease_db?retryWrites=true&w=majority"
+
+# Initialize bcrypt and MongoDB client
+bcrypt = Bcrypt(app)
+client = MongoClient(mongo_uri)
 db = client["heart_disease_db"]
+
+# Collections
 users_collection = db["users"]
 patients_collection = db["patients"]
 predictions_collection = db["predictions"]
@@ -107,7 +124,7 @@ def predict():
         num_major_vessels = int(form_data.get("num_major_vessels", 0))
         chest_pain_type = form_data.get("chest_pain_type", "").strip()
 
-        # Improved risk assessment logic
+        # Basic risk assessment logic
         if (cholesterol > 220 or blood_pressure > 150 or oldpeak > 2 or num_major_vessels > 1 or chest_pain_type in ["Typical Angina", "Asymptomatic"]):
             prediction = "High Risk of Heart Disease"
             confidence = 85
@@ -141,5 +158,9 @@ def logout():
     flash("Logged out successfully.", "info")
     return redirect(url_for('login'))
 
+@app.route('/test')
+def test():
+    return "Flask is working!"
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='127.0.0.1', port=5000, debug=True, use_reloader=False)
